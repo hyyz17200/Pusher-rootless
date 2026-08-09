@@ -55,6 +55,22 @@ jobs:
         cp -R .theos/obj/AltList.framework "$THEOS/lib/iphone/roothide/"
         cd ..
 
+    - name: Sync package version from release tag
+      if: startsWith(github.ref, 'refs/tags/') || github.event_name == 'release'
+      shell: bash
+      env:
+        RELEASE_TAG: ${{ github.event.release.tag_name || github.ref_name }}
+      run: |
+        set -euo pipefail
+        if [[ ! "$RELEASE_TAG" =~ ^v[0-9]+\.[0-9]+\.[0-9]+([~-][0-9A-Za-z.+-]+)?$ ]]; then
+          echo "Invalid release tag: $RELEASE_TAG" >&2
+          exit 1
+        fi
+        package_version="${RELEASE_TAG#v}"
+        sed -i.bak -E "s/^Version:.*/Version: ${package_version}/" control
+        rm control.bak
+        grep -Fx "Version: ${package_version}" control
+
     - name: Build package
       shell: bash
       run: |

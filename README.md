@@ -1,11 +1,11 @@
-# Pusher-rootless
+# Pusher-rootless-plus
 
-rootless version of [NoahSaso/Pusher](https://github.com/NoahSaso/Pusher)  
-无根版本的 [NoahSaso/Pusher](https://github.com/NoahSaso/Pusher)
+An independently developed fork of [jzksnsjswkw/Pusher-rootless](https://github.com/jzksnsjswkw/Pusher-rootless).  
 
-Support for iOS 15-16 / 支持 iOS 15-16
+## New Features
 
-有汉化需求的fork一份自己做，勿提PR :)
+- Add Telegram bot service
+- Add roothide build and release packages
 
 ## Building
 
