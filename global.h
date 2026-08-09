@@ -148,6 +148,7 @@ typedef enum {
 
 #import <Preferences/PSSpecifier.h>
 #import <BulletinBoard/BBBulletin.h>
+#import <BulletinBoard/BBServer.h>
 #import <BulletinBoard/BBSectionInfo.h> // imports BBSectionInfoSettings
 #import <SpringBoard/SBApplication.h>
 #import <SpringBoard/SBApplicationController.h>
@@ -184,7 +185,7 @@ typedef enum {
 // @property (nonatomic, copy) NSArray *additionalAttachments;
 @end
 
-@interface BBServer : NSObject
+@interface BBServer (Pusher)
 - (BBSectionInfo *)_sectionInfoForSectionID:(id)arg1 effective:(BOOL)arg2;
 + (BBServer *)pusherSharedInstance;
 - (void)sendBulletinToPusher:(BBBulletin *)bulletin;

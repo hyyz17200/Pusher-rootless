@@ -1542,7 +1542,8 @@ static NSString *prefsSayNo(BBServer *server, BBBulletin *bulletin) {
                   ![telegramResponse[@"ok"] boolValue]) {
                 NSString *description = telegramResponse[@"description"] ?: dataStr;
                 addToLogIfEnabled(service, bulletin,
-                                  XStr(@"Telegram API Error: %@", description), YES);
+                                  XStr(@"Telegram API Error: %@", description),
+                                  nil, YES);
                 XLog(@"%@ Telegram API Error: %@", logString, description);
                 [pusherRetriesLeft removeObjectForKey:retryKey];
                 return;
