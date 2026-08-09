@@ -45,7 +45,25 @@ static NSMutableArray *pusherEnabledLogs = nil;
 static BBServer *bbServerInstance = nil;
 
 static NSMutableArray *recentNotificationTitles = [NSMutableArray new];
+static NSMutableSet *forwardedBulletinKeys = [NSMutableSet new];
 static NSMutableDictionary *pusherRetriesLeft = [NSMutableDictionary new];
+
+static BOOL markBulletinAsForwardedIfNew(BBBulletin *bulletin) {
+  NSArray *key = @[
+    bulletin.bulletinID ?: @"empty_bulletin_id",
+    bulletin.sectionID ?: @"empty_app_id",
+    bulletin.date ?: [NSNull null]
+  ];
+
+  @synchronized(forwardedBulletinKeys) {
+    if ([forwardedBulletinKeys containsObject:key]) {
+      return NO;
+    }
+
+    [forwardedBulletinKeys addObject:key];
+  }
+  return YES;
+}
 
 static NSString *retriesLeftKeyForBulletinAndService(BBBulletin *bulletin,
                                                      NSString *service) {
@@ -972,6 +990,15 @@ static NSString *prefsSayNo(BBServer *server, BBBulletin *bulletin) {
 
   if (pusherEnabledServices.count == 0) {
     XLog(@"No services enabled!");
+    return;
+  }
+
+  // SpringBoard can publish the same bulletin again when the device unlocks
+  // or its privacy/destination state changes. Forward each bulletin only once.
+  // Network retries bypass this method and call makePusherRequest directly.
+  if (!markBulletinAsForwardedIfNew(bulletin)) {
+    XLog(@"Not forwarding duplicate bulletin: %@", bulletin.bulletinID);
+    addToLogIfEnabled(@"", bulletin, @"Duplicate bulletin already forwarded");
     return;
   }
 
