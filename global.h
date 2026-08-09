@@ -1,14 +1,20 @@
 #import <Foundation/Foundation.h>
+#if defined(THEOS_PACKAGE_SCHEME_ROOTHIDE)
+#import <roothide.h>
+#define PUSHER_ROOT_PATH(path) jbroot(path)
+#else
 #import <rootless.h>
+#define PUSHER_ROOT_PATH(path) ROOT_PATH_NS(path)
+#endif
 
 #define kName @"Pusher"
 
-#define PUSHER_PREFS_FILE ROOT_PATH_NS(@"/var/mobile/Library/Preferences/com.noahsaso.pusher.plist")
+#define PUSHER_PREFS_FILE PUSHER_ROOT_PATH(@"/var/mobile/Library/Preferences/com.noahsaso.pusher.plist")
 #define PUSHER_PREFS_NOTIFICATION "com.noahsaso.pusher/prefs"
 #define PUSHER_APP_ID CFSTR("com.noahsaso.pusher")
 #define PUSHER_LOG_PREFS_NOTIFICATION "com.noahsaso.pusher~log/prefs"
 #define PUSHER_LOG_ID CFSTR("com.noahsaso.pusher~log")
-#define PUSHER_BUNDLE_PATH ROOT_PATH_NS(@"/Library/PreferenceBundles/Pusher.bundle")
+#define PUSHER_BUNDLE_PATH PUSHER_ROOT_PATH(@"/Library/PreferenceBundles/Pusher.bundle")
 #define PUSHER_BUNDLE [NSBundle bundleWithPath:PUSHER_BUNDLE_PATH]
 #define PUSHER_COLOR [UIColor colorWithRed:0.0 green:177/255.0 blue:79/255.0 alpha:1.0]
 #define PUSHER_TRIES 5 // how many times pusher will try to send the web request
